@@ -5,7 +5,10 @@ import numpy as np
 import sys
 PI = np.pi
 
-
+"""
+Funcion que se encarga de agregarle el ruido AWGN a la señal ya modulada
+retorna la señal con el ruido añadido
+"""
 def noise_channel(signal, snr):
     np.random.seed(127369)
     noise_sig = np.random.normal(0, 1, len(signal))
@@ -18,7 +21,10 @@ def noise_channel(signal, snr):
     signal_awgn = signal + noise_sig
     return signal_awgn
 
-
+"""
+Funcion que se encarga de hace las pruebas de transmisiones y genera los 
+gráficos respectivos para sus posteriores análisis
+"""
 def ber_vs_snr( bitrate ):
     sig_len = 1e5 # Numero de bits para prueba
     bits = np.random.randint(2, size=int(sig_len))
@@ -48,6 +54,12 @@ def ber_vs_snr( bitrate ):
     plt.show()
 
 
+"""
+Funcion que se encarga de realizar la modulacion FSK en base a una señal compuesta por bits 
+y una tasa de bit (bitrate), plot_result es un booleano que indica si se quiere o no graficar
+los resultados obtenidos
+retorna la señal obtenida por la modulación
+"""
 def mod_FSK( bits, bitrate, plot_results):
     # La frecuencia de la señal se adapta al bitrate para completar al menos 1 ciclo
     # De lo contrario no es posible enviar altos bitrate
@@ -88,7 +100,13 @@ def mod_FSK( bits, bitrate, plot_results):
 
     return tiempo_signal, salida, len_bit
 
-
+"""
+Funcion que se encarga de realizar la demodulacion de una señal modulada por FSK en base 
+a un tiempo de bit, la señal ya antes dicha, una tasa de bit (bitrate) y el samp_bit que 
+es el numero de muestras que tiene un bit plot_result es un booleano que indica si se 
+quiere o no graficar los resultados obtenidos
+retorna la señal ya demodulada, o sea un arreglo con bits
+"""
 def demod_FSK(tiempo, signal, samp_bit, bitrate, plot_results):
     f1 = bitrate
     f2 = 2 * f1
@@ -138,7 +156,9 @@ def demod_FSK(tiempo, signal, samp_bit, bitrate, plot_results):
 
     return bits_decoded
 
-
+"""
+Funcion principal
+"""
 def main(argv):
 
     bits = [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1]
@@ -170,7 +190,12 @@ def main(argv):
     '''
     return 0
 
-
+"""
+Funcion que se encarga de calcular la la tasa de error binario​ en una señal digital
+demodulada, en este caso demodulada con la funcion demod_FSK, recibe como parametro
+la señal digital antes mencionada y la señal digital que fue modulada originalmente
+retorna finalmente la tasa de error
+"""
 def signal_ber(bits_decoded, bits):
     error_count = 0
     for i in range(len(bits)):
