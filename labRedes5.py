@@ -13,16 +13,14 @@ def noise_channel(signal, snr):
     energia_n = np.sum(np.abs(noise_sig) * np.abs(noise_sig))
     snr_lineal = np.exp(snr/10)
     delta = np.sqrt(energia_s / (energia_n * snr_lineal))
-    # print('E signal: ' + str(energia_s))
-    # print('E noise: ' + str(energia_n))
-    # print('SNR lineal: ' + str(snr_lineal))
     print('Desviación ruido: ' + str(delta))
     noise_sig = delta*noise_sig
     signal_awgn = signal + noise_sig
     return signal_awgn
 
+
 def ber_vs_snr( bitrate ):
-    sig_len = 1e4 # Numero de bits para prueba
+    sig_len = 1e5 # Numero de bits para prueba
     bits = np.random.randint(2, size=int(sig_len))
     colores = ['-b', '-g', '-r']
     plt.figure(10)
@@ -41,7 +39,6 @@ def ber_vs_snr( bitrate ):
             lab = str(bitrate) + ' [bps]'
             print("**** Fin prueba ****\n")
         plt.plot(snr_x, ber_y, colores[i], label=lab, marker="o")
-        #legend.append(str(bitrate) + ' [bps]')
 
     plt.grid(True)
     plt.xlabel('SNR (dB)')
@@ -54,6 +51,7 @@ def ber_vs_snr( bitrate ):
 def mod_FSK( bits, bitrate, plot_results):
     # La frecuencia de la señal se adapta al bitrate para completar al menos 1 ciclo
     # De lo contrario no es posible enviar altos bitrate
+
     tb = 1 / bitrate
     f1 = bitrate
     f2 = 2 * f1
@@ -135,7 +133,7 @@ def demod_FSK(tiempo, signal, samp_bit, bitrate, plot_results):
     if plot_results:
         plt.figure(8)
         plt.plot(tiempo, symbol_signal, 'orange', linewidth=1)
-        plt.title("Detector de envoltura")
+        plt.title("Decodificación por voltaje")
         plt.show()
 
     return bits_decoded
@@ -155,14 +153,11 @@ def main(argv):
 
     ber_vs_snr(bitrate)
 
-    # Demodulacion FSK
-
-    '''
     plt.figure(4)
-    plt.plot(tiempo_signal, salida)
+    plt.plot(time, signal)
     plt.title("Señal modulada")
     plt.show()
-    '''
+
     # FFT para ver
     '''
     fft_mod = np.abs(fft(salida))
